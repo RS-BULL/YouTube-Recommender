@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" })); // Allow all origins
+app.use(cors({ origin: "*" }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -21,12 +21,11 @@ app.get("/search", async (req, res) => {
 
     console.log(`🔍 Searching YouTube for: ${query}`);
 
-    let browser; // Correctly define browser once
-
+    let browser;
+    
     try {
         browser = await puppeteer.launch({
-            headless: "new",
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/google-chrome-stable",
+            headless: "new", 
             args: [
                 "--no-sandbox",
                 "--disable-setuid-sandbox",
@@ -59,7 +58,7 @@ app.get("/search", async (req, res) => {
         console.error("❌ Error:", error.message);
         res.status(500).json({ error: "Failed to fetch YouTube results" });
     } finally {
-        if (browser) await browser.close(); // Close browser only if defined
+        if (browser) await browser.close();
     }
 });
 
