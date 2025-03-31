@@ -21,18 +21,18 @@ app.get("/search", async (req, res) => {
 
     console.log(`🔍 Searching YouTube for: ${query}`);
 
-    let browser; // Define browser before try block
+    let browser; // Correctly define browser once
 
     try {
-        const browser = await puppeteer.launch({
-              headless: "new",
-              executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/google-chrome-stable",
-              args: [
-                  "--no-sandbox",
-                  "--disable-setuid-sandbox",
-                  "--disable-blink-features=AutomationControlled"
-    ]
-});
+        browser = await puppeteer.launch({
+            headless: "new",
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/google-chrome-stable",
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-blink-features=AutomationControlled"
+            ]
+        });
 
         const page = await browser.newPage();
         await page.goto(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, {
@@ -59,7 +59,7 @@ app.get("/search", async (req, res) => {
         console.error("❌ Error:", error.message);
         res.status(500).json({ error: "Failed to fetch YouTube results" });
     } finally {
-        if (browser) await browser.close(); // Close only if browser is defined
+        if (browser) await browser.close(); // Close browser only if defined
     }
 });
 
