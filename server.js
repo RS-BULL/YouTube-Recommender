@@ -21,16 +21,16 @@ app.get("/search", async (req, res) => {
 
     console.log(`🔍 Searching YouTube for: ${query}`);
 
-    let browser;
-    try {
-        browser = await puppeteer.launch({
-            headless: "new",
-            args: [
-                "--no-sandbox",
-                "--disable-setuid-sandbox",
-                "--disable-blink-features=AutomationControlled"
-            ]
-        });
+    const browser = await puppeteer.launch({
+    headless: "new",
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
+    args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-blink-features=AutomationControlled"
+    ]
+});
+
 
         const page = await browser.newPage();
         await page.goto(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, {
