@@ -8,7 +8,7 @@ puppeteer.use(StealthPlugin());
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: "*" })); // Allow all origins for now
+app.use(cors({ origin: "*" })); // Allow all origins
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -21,16 +21,18 @@ app.get("/search", async (req, res) => {
 
     console.log(`🔍 Searching YouTube for: ${query}`);
 
-    const browser = await puppeteer.launch({
-    headless: "new",
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
-    args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-blink-features=AutomationControlled"
-    ]
-});
+    let browser; // Define browser before try block
 
+    try {
+        browser = await puppeteer.launch({
+            headless: "new",
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || puppeteer.executablePath(),
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-blink-features=AutomationControlled"
+            ]
+        });
 
         const page = await browser.newPage();
         await page.goto(`https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`, {
@@ -57,7 +59,7 @@ app.get("/search", async (req, res) => {
         console.error("❌ Error:", error.message);
         res.status(500).json({ error: "Failed to fetch YouTube results" });
     } finally {
-        if (browser) await browser.close();
+        if (browser) await browser.close(); // Close only if browser is defined
     }
 });
 
