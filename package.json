@@ -1,0 +1,16 @@
+{
+    "name": "yt-recommender",
+    "version": "1.0.0",
+    "description": "YouTube Video Recommender",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "cors": "^2.8.5",
+      "puppeteer-extra": "^3.3.3",
+      "puppeteer-extra-plugin-stealth": "^2.11.1"
+    }
+  }
+  
