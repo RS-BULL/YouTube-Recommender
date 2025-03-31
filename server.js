@@ -8,15 +8,13 @@ puppeteer.use(StealthPlugin());
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Fix CORS for GitHub Pages Frontend
-app.use(cors({ origin: "https://rs-bull.github.io" }));
+app.use(cors({ origin: "*" })); // Allow all origins for now
 app.use(express.json());
 
 app.get("/", (req, res) => {
     res.send("✅ YouTube Recommender Backend is Running!");
 });
 
-// ✅ Main Search Route
 app.get("/search", async (req, res) => {
     const query = req.query.q;
     if (!query) return res.status(400).json({ error: "❌ Missing search query" });
@@ -26,8 +24,12 @@ app.get("/search", async (req, res) => {
     let browser;
     try {
         browser = await puppeteer.launch({
-            headless: "new", // More stable for modern Puppeteer
-            args: ["--disable-setuid-sandbox", "--disable-blink-features=AutomationControlled"]
+            headless: "new",
+            args: [
+                "--no-sandbox",
+                "--disable-setuid-sandbox",
+                "--disable-blink-features=AutomationControlled"
+            ]
         });
 
         const page = await browser.newPage();
@@ -59,5 +61,4 @@ app.get("/search", async (req, res) => {
     }
 });
 
-// ✅ Start Server
 app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
