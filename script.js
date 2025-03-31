@@ -10,7 +10,7 @@ async function searchVideos() {
   
     try {
       // Make a request to your Puppeteer server
-      const response = await fetch("https://your-app.onrender.com/search?q=" + encodeURIComponent(query));
+      const response = await fetch("https://youtube-recommender.onrender.com/search?q=" + encodeURIComponent(query));
       const data = await response.json();
   
       if (!Array.isArray(data) || data.length === 0) {
